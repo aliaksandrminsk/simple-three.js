@@ -1,0 +1,25 @@
+<style>
+	body{margin:0;overflow:hidden; height:100vh;}
+	
+	#menu{position:absolute; z-index:1; top:10px; left:10px;}
+	
+	.btn{
+		font-size: 10px;
+		color:white;
+		border:1px solid;
+		padding:5px;
+		margin-bottom:5px;
+		width:100px;
+		cursor:pointer;
+		font-family:Tahoma;
+		text-align:center;
+	}
+
+</style>
+
+<div id="menu"></div>
+
+<script type="module">
+	import App from "./app.js";
+	window.onload = ()=>{new App();}
+</script>
