@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@types/three": "^0.144.0",
     "three": "^0.145.0"
   },
   "scripts": {

@@ -1,2 +1,5 @@
-import App from "./app.js";
-window.onload = ()=>{new App();}
+import { App } from "./App";
+
+window.onload = () => {
+  new App();
+};
