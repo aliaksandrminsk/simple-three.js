@@ -1,4 +1,4 @@
-# Runner game
+# Three.js example.
 
 This project is a simple example of three.js. Technologies: [Three.js](https://threejs.org/), [TypeScript](https://www.typescriptlang.org/) and [Webpack](https://webpack.js.org/)
 
@@ -11,5 +11,5 @@ npm install
 npm run start
 ```
 
-[Runner game
+[Three.js example
 ](https://simple-threejs.web.app/)
