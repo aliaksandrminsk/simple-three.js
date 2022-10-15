@@ -1,13 +1,15 @@
+type CallBackType = (a?: number, b?: number) => void;
+
 interface ILoops {
   [key: string]: {
-    func: (a?: number, b?: number) => void;
+    func: CallBackType;
     pause: boolean;
   };
 }
 
 interface ILimits {
   [key: string]: {
-    func: (a?: number, b?: number) => void;
+    func: CallBackType;
     current: number;
     duration: number;
     type: number;
@@ -27,7 +29,7 @@ export class Updater {
   }
 
   //** Add infinite animation (name - unique animation name, func - function executed every frame)
-  addLoop(name: string, func: any) {
+  addLoop(name: string, func: CallBackType) {
     this.loops[name] = { func: func, pause: false };
   }
 
@@ -37,12 +39,19 @@ export class Updater {
   }
 
   //** Add final animation (name - unique animation name, func -  function executed every frame, duration - duration in frames if specified as a number, or in seconds if specified as a string - "5sec")
-  addLimit(name: string, func: () => void, duration: number): string {
+  addLimit(
+    name: string,
+    func: CallBackType,
+    duration: number | string
+  ): string {
     let type = 0;
+    let numberDuration;
 
     if (typeof duration === "string") {
-      duration = parseFloat(duration);
+      numberDuration = parseFloat(duration);
       type = 1;
+    } else {
+      numberDuration = duration;
     }
 
     if (!name) name = "limit_" + Math.random().toString(36).substring(2, 11);
@@ -50,7 +59,7 @@ export class Updater {
     this.limits[name] = {
       func: func,
       current: 0,
-      duration: duration,
+      duration: numberDuration,
       type: type,
     };
 

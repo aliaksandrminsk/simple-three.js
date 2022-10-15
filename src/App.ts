@@ -104,7 +104,7 @@ export class App {
 
     this.g.u.addLimit(
       "move_camera",
-      (prgs: any, frame: any) => {
+      (prgs: number, frame: number) => {
         if (frame < 60) {
           const p = this.g.u.step(0, 60, frame);
 
