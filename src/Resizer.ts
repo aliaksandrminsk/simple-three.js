@@ -2,19 +2,16 @@ export class Resizer {
   public resizes: any = {};
 
   constructor() {
-    //let that = this;
     window.addEventListener("resize", () => {
-      that.resizeAll();
+      this.resizeAll();
     });
   }
 
-  add(name: string, func: any) {
-    // Добавить реакцию на изменение окна браузера (name - название реакции, func - функция реакции)
+  add(name: string, func: () => void) {
     this.resizes[name] = func;
   }
 
   remove(name: string): void {
-    // Удалить реакцию на изменение окна браузера
     delete this.resizes[name];
   }
 
