@@ -1,5 +1,4 @@
 import * as THREE from "three";
-//import { Camera } from "three/src/cameras/Camera";
 
 export class Viewer {
   public camera: THREE.Camera;
@@ -16,15 +15,12 @@ export class Viewer {
 
     this.setDefaultCameraPosition();
   }
+  //** Create scene.
   addScene(scene: any) {
-    // Создать новую сцену или заменить имеющуюся
-
     this.scene = scene || new THREE.Scene();
   }
-  //RENDERER
-  addRenderer(settings: any) {
-    // Создать рендер
 
+  addRenderer(settings: any) {
     if (this.renderer) {
       if (this.renderer.domElement.parentNode) {
         this.renderer.domElement.parentNode.removeChild(
@@ -47,19 +43,17 @@ export class Viewer {
 
     return;
   }
-  resizeRender() {
-    // Изменить размер окна рендера
 
-    const dom = this.renderer.domElement.parentNode;
-    if (dom) {
+  resizeRender() {
+    const dom = this.renderer.domElement.parentNode as HTMLElement | null;
+    if (dom != null) {
       this.renderer.setSize(dom.offsetWidth, dom.offsetHeight);
     }
   }
   render() {
-    // Отрисовать сцену из камеры
     this.renderer.render(this.scene, this.camera);
   }
-  //CAMERA
+  //** Add camera.
   addCamera(settings: any) {
     // Создать камеру на основе параметров или заменить существующую settings - параметры иди новая камера
 
@@ -89,20 +83,17 @@ export class Viewer {
         settings.far || 100
       );
 
-      //this.sideSize = settins.sideSize || 1;
       this.sideSize = settings.sideSize || 1;
     }
   }
 
+  //** Set default size.
   setDefaultCameraPosition() {
-    // положение  камеры по умолчанию.
-
     this.camera.position.set(5, 5, 10);
     this.camera.lookAt(0, 0, 0);
   }
 
   resizeCamera() {
-    // Изменить отношение сторон камеры
     if ((this.camera as THREE.PerspectiveCamera).isPerspectiveCamera) {
       (this.camera as THREE.PerspectiveCamera).aspect =
         this.renderer.domElement.width / this.renderer.domElement.height;
