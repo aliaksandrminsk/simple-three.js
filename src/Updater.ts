@@ -1,7 +1,23 @@
+interface ILoops {
+  [key: string]: {
+    func: (a?: number, b?: number) => void;
+    pause: boolean;
+  };
+}
+
+interface ILimits {
+  [key: string]: {
+    func: (a?: number, b?: number) => void;
+    current: number;
+    duration: number;
+    type: number;
+  };
+}
+
 export class Updater {
-  public loops: any = {};
-  public limits: any = {};
-  public time = 0;
+  public loops: ILoops = {};
+  public limits: ILimits = {};
+  //public time = 0;
   public lastTime = 0;
   public delta = 0;
   public fps = 75;
@@ -10,31 +26,26 @@ export class Updater {
     this.start();
   }
 
+  //** Add infinite animation (name - unique animation name, func - function executed every frame)
   addLoop(name: string, func: any) {
-    // Добавить бесконечную анимацию (name - Уникальное имя анимации, func - функция, которая будет выполняться каждый кадр)
-
     this.loops[name] = { func: func, pause: false };
   }
 
+  //** Remove infinite animation
   removeLoop(name: string) {
     delete this.loops[name];
-  } // Удалить бесконечную анимацию
+  }
 
-  addLimit(name: string, func: any, duration: any) {
-    // Добавить конечную анимацию (name - Уникальное имя анимации, func - функция, которая будет выполняться каждый кадр, duration - продолжительность в кадрах, если указать число, или в секундах, если указать в виде строки - "5sec")
-
-    //let duration = duration;
-
+  //** Add final animation (name - unique animation name, func -  function executed every frame, duration - duration in frames if specified as a number, or in seconds if specified as a string - "5sec")
+  addLimit(name: string, func: () => void, duration: number): string {
     let type = 0;
 
     if (typeof duration === "string") {
       duration = parseFloat(duration);
-
-      //let type = 1;
       type = 1;
     }
 
-    if (!name) name = "limit_" + Math.random().toString(36).substr(2, 9);
+    if (!name) name = "limit_" + Math.random().toString(36).substring(2, 11);
 
     this.limits[name] = {
       func: func,
@@ -46,11 +57,12 @@ export class Updater {
     return name;
   }
 
+  //** Remove final animation
   removeLimit(name: string) {
     delete this.limits[name];
   } // Удалить конечную анимацию
 
-  setFps(fps: any) {
+  setFps(fps: number) {
     this.fps = fps;
   }
 
@@ -60,8 +72,6 @@ export class Updater {
     this.update();
   }
   update() {
-    //const that = this;
-
     requestAnimationFrame(() => {
       this.update();
     });
@@ -70,16 +80,20 @@ export class Updater {
 
     this.lastTime = Date.now();
 
-    if (this.pause) return;
+    //if (this.pause) return;
 
     if (this.delta < 1 / this.fps) return;
 
-    for (const l in this.loops) if (!this.loops[l].pause) this.loops[l].func();
+    const loopKeys = Object.keys(this.loops);
+    for (const l of loopKeys) {
+      if (!this.loops[l].pause) this.loops[l].func();
+    }
 
-    for (const l in this.limits) {
+    const limitKeys = Object.keys(this.limits);
+    for (const l of limitKeys) {
       if (this.limits[l].current >= this.limits[l].duration) {
         this.removeLimit(l);
-        continue;
+        //continue;
       } else if (this.limits[l].type === 0) {
         this.limits[l].current++;
 
@@ -99,38 +113,30 @@ export class Updater {
     }
   }
 
+  //** Linear interpolation. Uniform change of number from start to end depending on p, its value is from 0 to 1. Examples: lerp(0,500,0.5) === 250; lerp(100,1000,0.1) === 190; lerp(5,18,0.7) === 9.1;
   lerp(start: number, end: number, p: number) {
-    // Линейная интерполяция.Равномерное изменение числа от start до end в зависимости от p, его значение от 0 до 1. Примеры: lerp(0,500,0.5) === 250; lerp(100,1000,0.1) === 190; lerp(5,18,0.7) === 9.1;
-
     return start + p * (end - start);
   }
 
+  //** Reverse lerp method, determines the progress (value from 0 to 1) based on the beginning of the end and the intermediate value
   step(start: number, end: number, frame: number) {
-    // Метод обратный lerp, определяет прогресс (значение от 0 до 1) на основе начала конца и промежуточного значения
-
     return (frame - start) / (end - start);
   }
 
-  smooth(number: number, p1: number, p2: number) {
-    //Кривая Безье (Кубическая). Интерполяция с плавным началом и плавным завершением. number (от 0 до 1) - значение которое нужно сгладить. p1 - направляющая 1,p2 -  - направляющая 2
-
+  smooth(value: number, p1: number, p2: number) {
     return (
-      Math.pow(1 - number, 3) * 0 +
-      3 * number * Math.pow(1 - number, 2) * p1 +
-      3 * number * number * (1 - number) * p2 +
-      Math.pow(number, 3) * 1
+      Math.pow(1 - value, 3) * 0 +
+      3 * value * Math.pow(1 - value, 2) * p1 +
+      3 * value * value * (1 - value) * p2 +
+      Math.pow(value, 3) * 1
     );
   }
 
   smoothStart(x: number) {
-    // Интерполяция с плавным Началом
-
     return 1 - Math.cos((x * Math.PI) / 2);
   }
 
   smoothEnd(x: number) {
-    // Интерполяция с плавным завершением
-
     return Math.sin((x * Math.PI) / 2);
   }
 }
