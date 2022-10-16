@@ -19,7 +19,7 @@ export class App {
 
     this.createLights();
 
-    this.cameraOrigin = this.g.v.camera.position.clone();
+    this.cameraOrigin = this.g.view.camera.position.clone();
 
     this.creatBtn("Move to the right", () => {
       this.moveBoxToTheSide(5);
@@ -53,10 +53,10 @@ export class App {
       0.5
     );
     light1.position.set(2, 3, 4);
-    if (this.g.v.scene) this.g.v.scene.add(light1);
+    if (this.g.view.scene) this.g.view.scene.add(light1);
 
     const light2: THREE.AmbientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    if (this.g.v.scene) this.g.v.scene.add(light2);
+    if (this.g.view.scene) this.g.view.scene.add(light2);
   }
 
   createBox() {
@@ -64,33 +64,33 @@ export class App {
       new THREE.BoxGeometry(1, 1, 1),
       new THREE.MeshStandardMaterial({ color: 0xdddddd })
     );
-    if (this.g.v.scene) this.g.v.scene.add(box);
+    if (this.g.view.scene) this.g.view.scene.add(box);
     this.box = box;
   }
 
   createGrid() {
-    if (this.g.v.scene) this.g.v.scene.add(new THREE.GridHelper(10, 10));
+    if (this.g.view.scene) this.g.view.scene.add(new THREE.GridHelper(10, 10));
   }
 
   moveBoxToTheSide(X: number) {
     const startX = this.box.position.x;
 
-    this.g.u.addLimit(
+    this.g.updater.addLimit(
       "move_box",
       (prgs: number) => {
-        prgs = this.g.u.smoothEnd(prgs);
+        prgs = this.g.updater.smoothEnd(prgs);
 
-        this.box.position.x = this.g.u.lerp(startX, X, prgs);
+        this.box.position.x = this.g.updater.lerp(startX, X, prgs);
       },
       "1sec"
     );
   }
   moveCameraToBox() {
-    const startCamera = this.g.v.camera.position.clone();
+    const startCamera = this.g.view.camera.position.clone();
 
     const deltaPosition = new THREE.Vector3();
 
-    const cameraDirection = this.g.v.camera.getWorldDirection(
+    const cameraDirection = this.g.view.camera.getWorldDirection(
       new THREE.Vector3()
     );
 
@@ -102,13 +102,13 @@ export class App {
 
     const offset = new THREE.Vector3(0, 3, 3);
 
-    this.g.u.addLimit(
+    this.g.updater.addLimit(
       "move_camera",
       (prgs: number, frame: number) => {
         if (frame < 60) {
-          const p = this.g.u.step(0, 60, frame);
+          const p = this.g.updater.step(0, 60, frame);
 
-          this.g.v.camera.position.lerpVectors(
+          this.g.view.camera.position.lerpVectors(
             startCamera,
             this.cameraOrigin,
             p
@@ -116,15 +116,15 @@ export class App {
 
           deltaTarget.lerpVectors(startTarget, zero, p);
 
-          this.g.v.camera.lookAt(deltaTarget);
+          this.g.view.camera.lookAt(deltaTarget);
         } else {
-          const p = this.g.u.step(61, 120, frame);
+          const p = this.g.updater.step(61, 120, frame);
 
           deltaPosition.copy(this.box.position);
 
           deltaPosition.add(offset);
 
-          this.g.v.camera.position.lerpVectors(
+          this.g.view.camera.position.lerpVectors(
             this.cameraOrigin,
             deltaPosition,
             p
@@ -132,7 +132,7 @@ export class App {
 
           deltaTarget.lerpVectors(zero, this.box.position, p);
 
-          this.g.v.camera.lookAt(deltaTarget);
+          this.g.view.camera.lookAt(deltaTarget);
         }
       },
       120
