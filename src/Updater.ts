@@ -69,7 +69,7 @@ export class Updater {
   //** Remove final animation
   removeLimit(name: string) {
     delete this.limits[name];
-  } // Удалить конечную анимацию
+  }
 
   setFps(fps: number) {
     this.fps = fps;
@@ -132,6 +132,7 @@ export class Updater {
     return (frame - start) / (end - start);
   }
 
+  //** Bezier Curve (Cubic). Interpolation with smooth start and smooth end. number (from 0 to 1) - the value to smooth. p1 - track 1, p2 - track 2.
   smooth(value: number, p1: number, p2: number) {
     return (
       Math.pow(1 - value, 3) * 0 +
