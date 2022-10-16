@@ -1,7 +1,13 @@
 import GUM from "./gum";
-import * as THREE from "three";
-import { Vector3 } from "three/src/math/Vector3";
-import { Mesh } from "three";
+import {
+  Vector3,
+  AmbientLight,
+  BoxGeometry,
+  DirectionalLight,
+  GridHelper,
+  Mesh,
+  MeshStandardMaterial,
+} from "three";
 
 export class App {
   protected g: GUM;
@@ -48,28 +54,25 @@ export class App {
   }
 
   createLights() {
-    const light1: THREE.DirectionalLight = new THREE.DirectionalLight(
-      0xffffff,
-      0.5
-    );
+    const light1: DirectionalLight = new DirectionalLight(0xffffff, 0.5);
     light1.position.set(2, 3, 4);
     if (this.g.view.scene) this.g.view.scene.add(light1);
 
-    const light2: THREE.AmbientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const light2: AmbientLight = new AmbientLight(0xffffff, 0.5);
     if (this.g.view.scene) this.g.view.scene.add(light2);
   }
 
   createBox() {
-    const box = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshStandardMaterial({ color: 0xdddddd })
+    const box = new Mesh(
+      new BoxGeometry(1, 1, 1),
+      new MeshStandardMaterial({ color: 0xdddddd })
     );
     if (this.g.view.scene) this.g.view.scene.add(box);
     this.box = box;
   }
 
   createGrid() {
-    if (this.g.view.scene) this.g.view.scene.add(new THREE.GridHelper(10, 10));
+    if (this.g.view.scene) this.g.view.scene.add(new GridHelper(10, 10));
   }
 
   moveBoxToTheSide(X: number) {
@@ -88,19 +91,17 @@ export class App {
   moveCameraToBox() {
     const startCamera = this.g.view.camera.position.clone();
 
-    const deltaPosition = new THREE.Vector3();
+    const deltaPosition = new Vector3();
 
-    const cameraDirection = this.g.view.camera.getWorldDirection(
-      new THREE.Vector3()
-    );
+    const cameraDirection = this.g.view.camera.getWorldDirection(new Vector3());
 
     const startTarget = startCamera.clone().add(cameraDirection);
 
-    const deltaTarget = new THREE.Vector3();
+    const deltaTarget = new Vector3();
 
-    const zero = new THREE.Vector3();
+    const zero = new Vector3();
 
-    const offset = new THREE.Vector3(0, 3, 3);
+    const offset = new Vector3(0, 3, 3);
 
     this.g.updater.addLimit(
       "move_camera",
