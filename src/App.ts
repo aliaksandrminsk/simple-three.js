@@ -38,6 +38,10 @@ export class App {
     this.creatBtn("Zoom camera", () => {
       this.moveCameraToBox();
     });
+
+    this.creatBtn("Reset camera", () => {
+      this.moveCameraFromBox();
+    });
   }
 
   creatBtn(text: string, callback: () => void) {
@@ -88,6 +92,8 @@ export class App {
       "1sec"
     );
   }
+
+  //** Zoom in
   moveCameraToBox() {
     const startCamera = this.g.view.camera.position.clone();
 
@@ -137,6 +143,39 @@ export class App {
         }
       },
       120
+    );
+  }
+
+  //** Zoom Out
+  moveCameraFromBox() {
+    const startCamera = this.g.view.camera.position.clone();
+
+    const cameraDirection = this.g.view.camera.getWorldDirection(new Vector3());
+
+    const startTarget = startCamera.clone().add(cameraDirection);
+
+    const deltaTarget = new Vector3();
+
+    const zero = new Vector3();
+
+    this.g.updater.addLimit(
+      "move_camera",
+      (prgs: number, frame: number) => {
+        if (frame < 60) {
+          const p = this.g.updater.step(0, 60, frame);
+
+          this.g.view.camera.position.lerpVectors(
+            startCamera,
+            this.cameraOrigin,
+            p
+          );
+
+          deltaTarget.lerpVectors(startTarget, zero, p);
+
+          this.g.view.camera.lookAt(deltaTarget);
+        }
+      },
+      60
     );
   }
 }
