@@ -27,12 +27,24 @@ export class App {
 
     this.cameraOrigin = this.g.view.camera.position.clone();
 
-    this.creatBtn("Move to the right", () => {
-      this.moveBoxToTheSide(5);
+    this.creatBtn("Move (+y)", () => {
+      this.moveBoxToTheSide("x", 5);
     });
 
-    this.creatBtn("Move to the left", () => {
-      this.moveBoxToTheSide(-5);
+    this.creatBtn("Move (-y)", () => {
+      this.moveBoxToTheSide("x", -5);
+    });
+
+    this.creatBtn("Move (+z)", () => {
+      this.moveBoxToTheSide("z", 5);
+    });
+
+    this.creatBtn("Move (-z)", () => {
+      this.moveBoxToTheSide("z", -5);
+    });
+
+    this.creatBtn("Stop the movement", () => {
+      this.stopMoving();
     });
 
     this.creatBtn("Zoom camera", () => {
@@ -79,18 +91,26 @@ export class App {
     if (this.g.view.scene) this.g.view.scene.add(new GridHelper(10, 10));
   }
 
-  moveBoxToTheSide(X: number) {
-    const startX = this.box.position.x;
+  moveBoxToTheSide(coordinate: "z" | "x", value: number) {
+    const startX = this.box.position[coordinate];
 
     this.g.updater.addLimit(
       "move_box",
       (prgs: number) => {
         prgs = this.g.updater.smoothEnd(prgs);
 
-        this.box.position.x = this.g.updater.lerp(startX, X, prgs);
+        this.box.position[coordinate] = this.g.updater.lerp(
+          startX,
+          value,
+          prgs
+        );
       },
       "1sec"
     );
+  }
+
+  stopMoving() {
+    this.g.updater.removeLimit("move_box");
   }
 
   //** Zoom in
