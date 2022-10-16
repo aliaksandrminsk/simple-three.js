@@ -3,27 +3,27 @@ import { Updater } from "./Updater";
 import { Resizer } from "./Resizer";
 
 export default class GUM {
-  public v: Viewer;
-  public u: Updater;
-  public r: Resizer;
+  public view: Viewer;
+  public updater: Updater;
+  public resizer: Resizer;
 
   constructor(settings: any) {
-    this.v = new Viewer(settings);
-    this.u = new Updater();
-    this.r = new Resizer();
+    this.view = new Viewer(settings);
+    this.updater = new Updater();
+    this.resizer = new Resizer();
 
     this.start();
   }
 
   start() {
-    this.u.addLoop("render", () => {
-      this.v.render();
+    this.updater.addLoop("render", () => {
+      this.view.render();
     });
 
-    this.r.add("resize_viewer", () => {
-      this.v.resizeRender();
-      this.v.resizeCamera();
+    this.resizer.add("resize_viewer", () => {
+      this.view.resizeRender();
+      this.view.resizeCamera();
     });
-    this.r.resizes["resize_viewer"]();
+    this.resizer.resizes["resize_viewer"]();
   }
 }
