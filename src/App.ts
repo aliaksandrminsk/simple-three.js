@@ -7,6 +7,7 @@ import {
   GridHelper,
   Mesh,
   MeshStandardMaterial,
+  ConeGeometry,
 } from "three";
 import { settings } from "./Settings";
 
@@ -132,6 +133,15 @@ export class App {
     );
     if (this.g.view.scene) this.g.view.scene.add(box);
     this.box = box;
+
+    const cone = new Mesh(
+      new ConeGeometry(0.5, 1, 8),
+      new MeshStandardMaterial({ color: "red" })
+    );
+    cone.position.y = 1;
+    cone.rotation.y = Math.PI / 2;
+    cone.name = "cone1";
+    this.box.add(cone);
   }
 
   createGrid() {

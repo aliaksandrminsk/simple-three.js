@@ -96,7 +96,7 @@ export class Viewer {
   //** Set default size.
   setDefaultCameraPosition() {
     this.camera.position.set(5, 5, 10);
-    this.camera.lookAt(0, 0, 0);
+    this.camera.lookAt(1, 0, 0);
   }
 
   resizeCamera() {
