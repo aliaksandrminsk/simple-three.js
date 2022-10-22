@@ -1,5 +1,11 @@
+type CallBackType = () => void;
+
+interface IResizer {
+  [name: string]: CallBackType;
+}
+
 export class Resizer {
-  public resizes: any = {};
+  public resizes: IResizer = {};
 
   constructor() {
     window.addEventListener("resize", () => {
@@ -7,7 +13,7 @@ export class Resizer {
     });
   }
 
-  add(name: string, func: () => void) {
+  add(name: string, func: CallBackType) {
     this.resizes[name] = func;
   }
 
