@@ -33,7 +33,13 @@ export class App {
       ],
       settings.camera.defaultCamera,
       (event) => {
-        const cameraSettings = settings.camera[event.target.value];
+        let cameraSettings;
+        if (event.target.value === "PerspectiveCamera") {
+          cameraSettings = settings.camera.perspectiveCamera;
+        } else if (event.target.value === "OrthographicCamera") {
+          cameraSettings = settings.camera.orthographicCamera;
+        }
+
         this.g.view.addCamera(cameraSettings);
         this.g.view.setDefaultCameraPosition();
         this.g.view.resizeCamera();

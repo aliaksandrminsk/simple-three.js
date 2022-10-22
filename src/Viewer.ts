@@ -23,7 +23,13 @@ export class Viewer {
 
     this.addScene(null);
 
-    this.addCamera(settings.camera[settings.camera.defaultCamera]);
+    let cameraSettings;
+    if (settings.camera.defaultCamera === "PerspectiveCamera") {
+      cameraSettings = settings.camera.perspectiveCamera;
+    } else if (settings.camera.defaultCamera === "OrthographicCamera") {
+      cameraSettings = settings.camera.orthographicCamera;
+    }
+    this.addCamera(cameraSettings);
 
     this.setDefaultCameraPosition();
   }

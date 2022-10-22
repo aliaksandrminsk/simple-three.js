@@ -4,8 +4,8 @@ export interface ISettings {
   renderer: IRendererSettings;
   camera: {
     defaultCamera: "PerspectiveCamera" | "OrthographicCamera";
-    PerspectiveCamera: IPerspectiveCameraSettings;
-    OrthographicCamera: IOrtographicCameraSettings;
+    perspectiveCamera: IPerspectiveCameraSettings;
+    orthographicCamera: IOrtographicCameraSettings;
   };
 }
 
@@ -42,10 +42,10 @@ export const settings: ISettings = {
   },
   camera: {
     defaultCamera: "PerspectiveCamera",
-    PerspectiveCamera: {
+    perspectiveCamera: {
       type: "PerspectiveCamera",
     },
-    OrthographicCamera: {
+    orthographicCamera: {
       type: "OrthographicCamera",
       sideSize: 5,
     },
