@@ -138,10 +138,18 @@ export class App {
       new ConeGeometry(0.5, 1, 8),
       new MeshStandardMaterial({ color: "red" })
     );
-    cone.position.y = 1;
+    cone.position.y = 0.5;
     cone.rotation.y = Math.PI / 2;
+    cone.scale.set(1, 0.6, 1);
     cone.name = "cone1";
     this.box.add(cone);
+
+    const cone2 = cone.clone();
+    cone2.position.z = 0.5;
+    cone2.position.y = 0;
+    cone2.rotation.z = Math.PI / 2;
+    cone2.name = "cone2";
+    this.box.add(cone2);
   }
 
   createGrid() {
