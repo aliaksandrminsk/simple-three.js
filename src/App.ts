@@ -8,24 +8,7 @@ import {
   Mesh,
   MeshStandardMaterial,
 } from "three";
-
-const settings = {
-  renderer: {
-    parent: document.body,
-    clearColor: "green",
-    pixelRatio: 1,
-  },
-  camera: {
-    defaultCamera: "PerspectiveCamera",
-    PerspectiveCamera: {
-      type: "PerspectiveCamera",
-    },
-    OrthographicCamera: {
-      type: "OrthographicCamera",
-      sideSize: 5,
-    },
-  },
-};
+import { settings } from "./Settings";
 
 export class App {
   protected g: GUM;

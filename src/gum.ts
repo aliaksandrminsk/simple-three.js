@@ -1,13 +1,14 @@
 import { Viewer } from "./Viewer";
 import { Updater } from "./Updater";
 import { Resizer } from "./Resizer";
+import { ISettings } from "./Settings";
 
 export default class GUM {
   public view: Viewer;
   public updater: Updater;
   public resizer: Resizer;
 
-  constructor(settings: any) {
+  constructor(settings: ISettings) {
     this.view = new Viewer(settings);
     this.updater = new Updater();
     this.resizer = new Resizer();

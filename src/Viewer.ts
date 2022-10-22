@@ -1,45 +1,16 @@
 import {
-  WebGLRendererParameters,
   Scene,
   WebGLRenderer,
   Camera,
   PerspectiveCamera,
   OrthographicCamera,
 } from "three";
-
-interface IRendererSettings extends WebGLRendererParameters {
-  parentElement: ChildNode;
-  clearColor: string;
-  pixelRatio: number;
-}
-
-interface IPerspectiveCameraSettings {
-  type: "PerspectiveCamera";
-  fov?: number;
-  width?: number;
-  near?: number;
-  far?: number;
-}
-
-interface IOrtographicCameraSettings {
-  type: "OrthographicCamera";
-  left?: number;
-  right?: number;
-  top?: number;
-  bottom?: number;
-  near?: number;
-  far?: number;
-  sideSize?: number;
-}
-
-interface ISettings {
-  renderer: IRendererSettings;
-  camera: {
-    defaultCamera: "PerspectiveCamera" | "OrthographicCamera";
-    PerspectiveCamera: IPerspectiveCameraSettings;
-    OrthographicCamera: IOrtographicCameraSettings;
-  };
-}
+import {
+  IOrtographicCameraSettings,
+  IPerspectiveCameraSettings,
+  IRendererSettings,
+  ISettings,
+} from "./Settings";
 
 export class Viewer {
   public camera: Camera;
