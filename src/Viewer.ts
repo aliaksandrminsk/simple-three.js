@@ -1,4 +1,17 @@
-import * as THREE from "three";
+import {
+  WebGLRendererParameters,
+  Scene,
+  WebGLRenderer,
+  Camera,
+  PerspectiveCamera,
+  OrthographicCamera,
+} from "three";
+
+interface IRendererSettings extends WebGLRendererParameters {
+  parentElement: ChildNode;
+  clearColor: string;
+  pixelRatio: number;
+}
 
 interface IPerspectiveCameraSettings {
   type: "PerspectiveCamera";
@@ -19,27 +32,36 @@ interface IOrtographicCameraSettings {
   sideSize?: number;
 }
 
-export class Viewer {
-  public camera: THREE.Camera;
-  public renderer: THREE.WebGLRenderer;
-  public sideSize: number;
-  public scene: THREE.Scene | null = null;
+interface ISettings {
+  renderer: IRendererSettings;
+  camera: {
+    defaultCamera: "PerspectiveCamera" | "OrthographicCamera";
+    PerspectiveCamera: IPerspectiveCameraSettings;
+    OrthographicCamera: IOrtographicCameraSettings;
+  };
+}
 
-  constructor(settings: any) {
+export class Viewer {
+  public camera: Camera;
+  public renderer: WebGLRenderer;
+  public sideSize: number;
+  public scene: Scene | null = null;
+
+  constructor(settings: ISettings) {
     this.addRenderer(settings.renderer);
 
     this.addScene(null);
 
-    this.addCamera(settings.camera[settings.camera.defaultCamera] || {});
+    this.addCamera(settings.camera[settings.camera.defaultCamera]);
 
     this.setDefaultCameraPosition();
   }
   //** Create scene.
-  addScene(scene: any) {
-    this.scene = scene || new THREE.Scene();
+  addScene(scene: Scene) {
+    this.scene = scene || new Scene();
   }
 
-  addRenderer(settings: any) {
+  addRenderer(settings: IRendererSettings) {
     if (this.renderer) {
       if (this.renderer.domElement.parentNode) {
         this.renderer.domElement.parentNode.removeChild(
@@ -50,17 +72,14 @@ export class Viewer {
       this.renderer.dispose();
     }
 
-    this.renderer = new THREE.WebGLRenderer(settings);
+    this.renderer = new WebGLRenderer(settings);
 
     (settings.parentElement || document.body).appendChild(
       this.renderer.domElement
     );
 
     this.renderer.setClearColor(settings.clearColor || "black");
-
     this.renderer.setPixelRatio(settings.pixelRatio || devicePixelRatio);
-
-    return;
   }
 
   resizeRender() {
@@ -77,14 +96,14 @@ export class Viewer {
     if (settings.type === "PerspectiveCamera") {
       const canvas = this.renderer.domElement;
 
-      this.camera = new THREE.PerspectiveCamera(
+      this.camera = new PerspectiveCamera(
         settings.fov || 45,
         canvas.width / canvas.height || 1,
         settings.near || 1,
         settings.far || 100
       );
     } else if (settings.type === "OrthographicCamera") {
-      this.camera = new THREE.OrthographicCamera(
+      this.camera = new OrthographicCamera(
         settings.left || -1,
         settings.right || 1,
         settings.top || 1,
@@ -104,24 +123,24 @@ export class Viewer {
   }
 
   resizeCamera() {
-    if ((this.camera as THREE.PerspectiveCamera).isPerspectiveCamera) {
-      (this.camera as THREE.PerspectiveCamera).aspect =
+    if ((this.camera as PerspectiveCamera).isPerspectiveCamera) {
+      (this.camera as PerspectiveCamera).aspect =
         this.renderer.domElement.width / this.renderer.domElement.height;
 
-      (this.camera as THREE.PerspectiveCamera).updateProjectionMatrix();
-    } else if ((this.camera as THREE.OrthographicCamera).isOrthographicCamera) {
+      (this.camera as PerspectiveCamera).updateProjectionMatrix();
+    } else if ((this.camera as OrthographicCamera).isOrthographicCamera) {
       const aspect =
         this.renderer.domElement.width / this.renderer.domElement.height;
 
-      (this.camera as THREE.OrthographicCamera).left = -this.sideSize * aspect;
+      (this.camera as OrthographicCamera).left = -this.sideSize * aspect;
 
-      (this.camera as THREE.OrthographicCamera).right = this.sideSize * aspect;
+      (this.camera as OrthographicCamera).right = this.sideSize * aspect;
 
-      (this.camera as THREE.OrthographicCamera).top = this.sideSize;
+      (this.camera as OrthographicCamera).top = this.sideSize;
 
-      (this.camera as THREE.OrthographicCamera).bottom = -this.sideSize;
+      (this.camera as OrthographicCamera).bottom = -this.sideSize;
 
-      (this.camera as THREE.OrthographicCamera).updateProjectionMatrix();
+      (this.camera as OrthographicCamera).updateProjectionMatrix();
     }
   }
 }
