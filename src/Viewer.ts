@@ -1,5 +1,24 @@
 import * as THREE from "three";
 
+interface IPerspectiveCameraSettings {
+  type: "PerspectiveCamera";
+  fov?: number;
+  width?: number;
+  near?: number;
+  far?: number;
+}
+
+interface IOrtographicCameraSettings {
+  type: "OrthographicCamera";
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
+  near?: number;
+  far?: number;
+  sideSize?: number;
+}
+
 export class Viewer {
   public camera: THREE.Camera;
   public renderer: THREE.WebGLRenderer;
@@ -11,7 +30,7 @@ export class Viewer {
 
     this.addScene(null);
 
-    this.addCamera(settings.camera || {});
+    this.addCamera(settings.camera[settings.camera.defaultCamera] || {});
 
     this.setDefaultCameraPosition();
   }
@@ -54,16 +73,7 @@ export class Viewer {
     this.renderer.render(this.scene, this.camera);
   }
   //** Add camera.
-  addCamera(settings: any) {
-    // Создать камеру на основе параметров или заменить существующую settings - параметры иди новая камера
-
-    if (settings.isCamera) {
-      this.camera = settings;
-      return;
-    }
-
-    settings.type = settings.type || "PerspectiveCamera";
-
+  addCamera(settings: IPerspectiveCameraSettings | IOrtographicCameraSettings) {
     if (settings.type === "PerspectiveCamera") {
       const canvas = this.renderer.domElement;
 
@@ -73,7 +83,7 @@ export class Viewer {
         settings.near || 1,
         settings.far || 100
       );
-    } else if (settings.type === "OrtographicCamera") {
+    } else if (settings.type === "OrthographicCamera") {
       this.camera = new THREE.OrthographicCamera(
         settings.left || -1,
         settings.right || 1,

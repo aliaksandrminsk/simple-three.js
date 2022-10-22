@@ -19,7 +19,6 @@ interface ILimits {
 export class Updater {
   public loops: ILoops = {};
   public limits: ILimits = {};
-  //public time = 0;
   public lastTime = 0;
   public delta = 0;
   public fps = 75;

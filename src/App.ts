@@ -9,15 +9,31 @@ import {
   MeshStandardMaterial,
 } from "three";
 
+const settings = {
+  renderer: {
+    parent: document.body,
+    clearColor: "green",
+    pixelRatio: 1,
+  },
+  camera: {
+    defaultCamera: "PerspectiveCamera",
+    PerspectiveCamera: {
+      type: "PerspectiveCamera",
+    },
+    OrthographicCamera: {
+      type: "OrthographicCamera",
+      sideSize: 5,
+    },
+  },
+};
+
 export class App {
   protected g: GUM;
   protected cameraOrigin: Vector3;
   protected box: Mesh;
 
   constructor() {
-    this.g = new GUM({
-      renderer: { parent: document.body, clearColor: "gray" },
-    });
+    this.g = new GUM(settings);
 
     this.createBox();
 
@@ -26,6 +42,20 @@ export class App {
     this.createLights();
 
     this.cameraOrigin = this.g.view.camera.position.clone();
+
+    this.creatSelectBox(
+      [
+        { name: "Perspective Camera", data: "PerspectiveCamera" },
+        { name: "Orthographic Camera", data: "OrthographicCamera" },
+      ],
+      settings.camera.defaultCamera,
+      (event) => {
+        const cameraSettings = settings.camera[event.target.value];
+        this.g.view.addCamera(cameraSettings);
+        this.g.view.setDefaultCameraPosition();
+        this.g.view.resizeCamera();
+      }
+    );
 
     this.creatBtn("Move (+y)", () => {
       this.moveBoxToTheSide("x", 5);
@@ -67,6 +97,34 @@ export class App {
     if (menu) {
       menu.appendChild(btn);
     }
+  }
+
+  creatSelectBox(
+    values: Array<{ name: string; data: string }>,
+    defaultValue: string,
+    callback: (e: any) => void
+  ) {
+    const selectList = document.createElement("select");
+    selectList.className = "select";
+
+    const menu = document.getElementById("menu");
+    if (menu) {
+      menu.appendChild(selectList);
+    }
+
+    for (let i = 0; i < values.length; i++) {
+      const option = document.createElement("option");
+      option.id = values[i].data;
+      option.value = values[i].data;
+      option.text = values[i].name;
+      selectList.appendChild(option);
+    }
+
+    //** Set default value.
+    if (defaultValue) {
+      selectList.options.namedItem(defaultValue).selected = true;
+    }
+    selectList.addEventListener("change", callback);
   }
 
   createLights() {
