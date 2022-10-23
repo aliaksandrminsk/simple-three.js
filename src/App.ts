@@ -136,7 +136,7 @@ export class App {
 
     const cone = new Mesh(
       new ConeGeometry(0.5, 1, 8),
-      new MeshStandardMaterial({ color: "red" })
+      new MeshStandardMaterial({ color: 0xdddddd })
     );
     cone.position.y = 0.5;
     cone.rotation.y = Math.PI / 2;
