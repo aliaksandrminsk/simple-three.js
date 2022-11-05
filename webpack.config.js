@@ -1,7 +1,7 @@
 const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-//const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 
@@ -39,17 +39,14 @@ const plugins = () => {
       minify: isProd,
     }),
     new CleanWebpackPlugin(),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     {
-    //       from: path.resolve(__dirname, "./assets/"),
-    //       to: path.resolve(__dirname, "dist"),
-    //       globOptions: {
-    //         ignore: ["**/index.html"],
-    //       },
-    //     },
-    //   ],
-    // }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "./assets/"),
+          to: path.resolve(__dirname, "dist"),
+        },
+      ],
+    }),
     new ESLintWebpackPlugin({ extensions: ["ts"] }),
   ];
   return base;

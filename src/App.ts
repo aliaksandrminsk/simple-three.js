@@ -8,6 +8,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   ConeGeometry,
+  TextureLoader,
 } from "three";
 import { settings } from "./Settings";
 
@@ -127,16 +128,18 @@ export class App {
   }
 
   createBox() {
-    const box = new Mesh(
+    const texture = new TextureLoader().load("./background.jpg");
+
+    this.box = new Mesh(
       new BoxGeometry(1, 1, 1),
-      new MeshStandardMaterial({ color: 0xdddddd })
+      new MeshStandardMaterial({ map: texture })
     );
-    if (this.g.view.scene) this.g.view.scene.add(box);
-    this.box = box;
+
+    if (this.g.view.scene) this.g.view.scene.add(this.box);
 
     const cone = new Mesh(
       new ConeGeometry(0.5, 1, 8),
-      new MeshStandardMaterial({ color: 0xdddddd })
+      new MeshStandardMaterial({ map: texture })
     );
     cone.position.y = 0.5;
     cone.rotation.y = Math.PI / 2;
