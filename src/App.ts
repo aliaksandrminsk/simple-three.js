@@ -10,6 +10,7 @@ import {
   ConeGeometry,
   TextureLoader,
   ShaderMaterial,
+  SphereGeometry,
 } from "three";
 import BasicShader from "./basic_shader";
 import { settings } from "./Settings";
@@ -159,6 +160,16 @@ export class App {
     cone2.position.y = 0.8;
     cone2.name = "cone2";
     this.box.add(cone2);
+
+    const sphere = new Mesh(
+      new SphereGeometry(0.9, 8, 8),
+      new MeshStandardMaterial({ map: tree_background })
+    );
+    sphere.position.y = 1.3;
+    sphere.rotation.y = Math.PI / 2;
+    sphere.scale.set(1, 0.6, 1);
+    sphere.name = "sphere";
+    this.box.add(sphere);
   }
 
   createGrid() {
