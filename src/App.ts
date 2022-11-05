@@ -1,4 +1,4 @@
-import GUM from "./gum";
+import Gum from "./Gum";
 import {
   Vector3,
   AmbientLight,
@@ -9,16 +9,18 @@ import {
   MeshStandardMaterial,
   ConeGeometry,
   TextureLoader,
+  ShaderMaterial,
 } from "three";
+import BasicShader from "./basic_shader";
 import { settings } from "./Settings";
 
 export class App {
-  protected g: GUM;
+  protected g: Gum;
   protected cameraOrigin: Vector3;
   protected box: Mesh;
 
   constructor() {
-    this.g = new GUM(settings);
+    this.g = new Gum(settings);
 
     this.createBox();
 
@@ -128,18 +130,23 @@ export class App {
   }
 
   createBox() {
-    const texture = new TextureLoader().load("./background.jpg");
+    const tree_background = new TextureLoader().load("./tree_background.jpg");
+    const photo_background = new TextureLoader().load("./photo_background.jpg");
 
     this.box = new Mesh(
       new BoxGeometry(1, 1, 1),
-      new MeshStandardMaterial({ map: texture })
+      new ShaderMaterial({
+        uniforms: BasicShader.uniforms,
+        vertexShader: BasicShader.vertexShader,
+        fragmentShader: BasicShader.fragmentShader,
+      })
     );
-
+    this.box.material["uniforms"].map.value = photo_background;
     if (this.g.view.scene) this.g.view.scene.add(this.box);
 
     const cone = new Mesh(
       new ConeGeometry(0.5, 1, 8),
-      new MeshStandardMaterial({ map: texture })
+      new MeshStandardMaterial({ map: tree_background })
     );
     cone.position.y = 0.5;
     cone.rotation.y = Math.PI / 2;
@@ -148,9 +155,8 @@ export class App {
     this.box.add(cone);
 
     const cone2 = cone.clone();
-    cone2.position.z = 0.5;
-    cone2.position.y = 0;
-    cone2.rotation.z = Math.PI / 2;
+    cone2.rotation.z = Math.PI;
+    cone2.position.y = 0.8;
     cone2.name = "cone2";
     this.box.add(cone2);
   }

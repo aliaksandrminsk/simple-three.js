@@ -3,7 +3,7 @@ import { Updater } from "./Updater";
 import { Resizer } from "./Resizer";
 import { ISettings } from "./Settings";
 
-export default class GUM {
+export default class Gum {
   public view: Viewer;
   public updater: Updater;
   public resizer: Resizer;
