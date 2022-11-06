@@ -52,11 +52,11 @@ export class App {
       }
     );
 
-    this.creatBtn("Move (+y)", () => {
+    this.creatBtn("Move (+x)", () => {
       this.moveBoxToTheSide("x", 5);
     });
 
-    this.creatBtn("Move (-y)", () => {
+    this.creatBtn("Move (-x)", () => {
       this.moveBoxToTheSide("x", -5);
     });
 
