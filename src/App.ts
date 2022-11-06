@@ -135,6 +135,9 @@ export class App {
   createBox() {
     const tree_background = new TextureLoader().load("./tree_background.jpg");
     const photo_background = new TextureLoader().load("./photo_background.jpg");
+    const asphalt_background = new TextureLoader().load(
+      "./asphalt_background.jpg"
+    );
 
     this.box = new Mesh(
       new BoxGeometry(1, 1, 1),
@@ -179,7 +182,7 @@ export class App {
 
     const plane = new Mesh(
       new PlaneGeometry(10, 10),
-      new MeshStandardMaterial({ color: "gray" })
+      new MeshStandardMaterial({ map: asphalt_background })
     );
     if (this.g.view.scene) this.g.view.scene.add(plane);
     plane.rotation.x = -Math.PI / 2;
