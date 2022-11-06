@@ -11,6 +11,7 @@ import {
   TextureLoader,
   ShaderMaterial,
   SphereGeometry,
+  PlaneGeometry,
 } from "three";
 import BasicShader from "./basic_shader";
 import { settings } from "./Settings";
@@ -124,6 +125,7 @@ export class App {
   createLights() {
     const light1: DirectionalLight = new DirectionalLight(0xffffff, 0.5);
     light1.position.set(2, 3, 4);
+    light1.castShadow = true; //Added shadow.
     if (this.g.view.scene) this.g.view.scene.add(light1);
 
     const light2: AmbientLight = new AmbientLight(0xffffff, 0.5);
@@ -143,6 +145,8 @@ export class App {
       })
     );
     this.box.material["uniforms"].map.value = photo_background;
+    this.box.castShadow = true;
+    this.box.position.y = 0.5;
     if (this.g.view.scene) this.g.view.scene.add(this.box);
 
     const cone = new Mesh(
@@ -153,6 +157,7 @@ export class App {
     cone.rotation.y = Math.PI / 2;
     cone.scale.set(1, 0.6, 1);
     cone.name = "cone1";
+    cone.castShadow = true;
     this.box.add(cone);
 
     const cone2 = cone.clone();
@@ -169,7 +174,16 @@ export class App {
     sphere.rotation.y = Math.PI / 2;
     sphere.scale.set(1, 0.6, 1);
     sphere.name = "sphere";
+    sphere.castShadow = true;
     this.box.add(sphere);
+
+    const plane = new Mesh(
+      new PlaneGeometry(10, 10),
+      new MeshStandardMaterial({ color: "gray" })
+    );
+    if (this.g.view.scene) this.g.view.scene.add(plane);
+    plane.rotation.x = -Math.PI / 2;
+    plane.receiveShadow = true;
   }
 
   createGrid() {

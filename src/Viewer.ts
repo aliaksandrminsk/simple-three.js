@@ -50,6 +50,7 @@ export class Viewer {
     }
 
     this.renderer = new WebGLRenderer(settings);
+    this.renderer.shadowMap.enabled = true; //Added shadow.
 
     (settings.parentElement || document.body).appendChild(
       this.renderer.domElement
