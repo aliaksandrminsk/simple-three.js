@@ -8,22 +8,45 @@ import {
   Mesh,
   MeshStandardMaterial,
   ConeGeometry,
-  TextureLoader,
   ShaderMaterial,
   SphereGeometry,
   PlaneGeometry,
 } from "three";
+
 import BasicShader from "./basic_shader";
 import { settings } from "./Settings";
+import { Preloader } from "./Preloader";
 
 export class App {
   protected g: Gum;
+  protected preloader: Preloader;
   protected cameraOrigin: Vector3;
   protected box: Mesh;
 
   constructor() {
     this.g = new Gum(settings);
+    this.preloader = new Preloader({ parent: document.body });
+    this.load();
+  }
 
+  load() {
+    this.g.loader.load(
+      [
+        "./tree_background.jpg",
+        "./photo_background.jpg",
+        "./asphalt_background.jpg",
+      ],
+      () => {
+        this.preloader.finish();
+        this.start();
+      },
+      (p) => {
+        this.preloader.setProgress(p);
+      }
+    );
+  }
+
+  start() {
     this.createBox();
 
     this.createGrid();
@@ -133,11 +156,11 @@ export class App {
   }
 
   createBox() {
-    const tree_background = new TextureLoader().load("./tree_background.jpg");
-    const photo_background = new TextureLoader().load("./photo_background.jpg");
-    const asphalt_background = new TextureLoader().load(
-      "./asphalt_background.jpg"
-    );
+    const tree_background = this.g.loader.resourses.textures["tree_background"];
+    const photo_background =
+      this.g.loader.resourses.textures["photo_background"];
+    const asphalt_background =
+      this.g.loader.resourses.textures["asphalt_background"];
 
     this.box = new Mesh(
       new BoxGeometry(1, 1, 1),
